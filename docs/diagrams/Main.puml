@@ -1,0 +1,150 @@
+@startuml
+
+
+namespace org.eclipse.milo.opcua.sdk.server.api.services {
+
+    interface AttributeServices {
+        void read(ReadContext context, Double maxAge, TimestampsToReturn timestamps, List<ReadValueId> readValueIds)
+        void write(WriteContext context, List<WriteValue> writeValues)
+    }
+
+    interface AttributeHistoryServices {
+        default void historyRead(HistoryReadContext context, HistoryReadDetails readDetails, TimestampsToReturn timestamps, List<HistoryReadValueId> readValueIds)
+        default void historyUpdate(HistoryUpdateContext context, List<HistoryUpdateDetails> updateDetails)
+    }
+
+    interface MethodServices {
+        void call(CallContext context, List<CallMethodRequest> requests)
+    }
+
+    interface MonitoredItemServices {
+        default void onCreateDataItem(ReadValueId itemToMonitor, Double requestedSamplingInterval, UInteger requestedQueueSize, BiConsumer<Double, UInteger> revisionCallback)
+        default void onModifyDataItem(ReadValueId itemToModify, Double requestedSamplingInterval, UInteger requestedQueueSize, BiConsumer<Double, UInteger> revisionCallback)
+        default void onCreateEventItem(ReadValueId itemToMonitor, UInteger requestedQueueSize, Consumer<UInteger> revisionCallback)
+        default void onModifyEventItem(ReadValueId itemToModify, UInteger requestedQueueSize, Consumer<UInteger> revisionCallback)
+        void onDataItemsCreated(List<DataItem> dataItems)
+        void onDataItemsModified(List<DataItem> dataItems)
+        void onDataItemsDeleted(List<DataItem> dataItems)
+        default void onEventItemsCreated(List<EventItem> eventItems)
+        default void onEventItemsModified(List<EventItem> eventItems)
+        default void onEventItemsDeleted(List<EventItem> eventItems)
+        void onMonitoringModeChanged(List<MonitoredItem> monitoredItems)
+    }
+
+    interface NodeManagementServices {
+        default void addNodes(AddNodesContext context, List<AddNodesItem> nodesToAdd)
+        default void deleteNodes(DeleteNodesContext context, List<DeleteNodesItem> nodesToDelete)
+        default void addReferences(AddReferencesContext context, List<AddReferencesItem> referencesToAdd)
+        default void deleteReferences(DeleteReferencesContext context, List<DeleteReferencesItem> referencesToDelete)
+    }
+
+    interface ViewServices {
+        default void browse(BrowseContext context, NodeId nodeId)
+        void browse(BrowseContext context, ViewDescription view, NodeId nodeId)
+        void getReferences(BrowseContext context, ViewDescription view, NodeId nodeId)
+        default void registerNodes(RegisterNodesContext context, List<NodeId> nodeIds)
+        default void unregisterNodes(UnregisterNodesContext context, List<NodeId> nodeIds)
+        default UInteger getViewCount()
+    }
+
+}
+
+namespace org.eclipse.milo.opcua.sdk.server {
+
+    class OpcUaServer {
+    }
+
+    class UaNodeManager {
+    }
+
+    interface Lifecycle {
+        void startup()
+        void shutdown()
+    }
+
+}
+
+namespace org.eclipse.milo.opcua.sdk.server.api {
+    
+
+    interface AddressSpace {
+    }
+    org.eclipse.milo.opcua.sdk.server.api.services.AttributeServices <|-- AddressSpace
+    org.eclipse.milo.opcua.sdk.server.api.services.AttributeHistoryServices <|-- AddressSpace
+    org.eclipse.milo.opcua.sdk.server.api.services.MethodServices <|-- AddressSpace
+    org.eclipse.milo.opcua.sdk.server.api.services.MonitoredItemServices <|-- AddressSpace
+    org.eclipse.milo.opcua.sdk.server.api.services.NodeManagementServices <|-- AddressSpace
+    org.eclipse.milo.opcua.sdk.server.api.services.ViewServices <|-- AddressSpace
+
+    interface Namespace {
+        UShort getNamespaceIndex()
+        String getNamespaceUri()
+    }
+    AddressSpace <|-- Namespace
+
+    interface AddressSpaceFragment {
+        AddressSpaceFilter getFilter()
+    } 
+    AddressSpace <|-- AddressSpaceFragment
+
+    abstract class ManagedAddressSpace {
+        ManagedAddressSpace(OpcUaServer server)
+        ManagedAddressSpace(OpcUaServer server, UaNodeManager nodeManager)
+        # NodeFactory createNodeFactory()
+        # OpcUaServer getServer()
+        # UaNodeContext getNodeContext()
+        # NodeFactory getNodeFactory()
+        # UaNodeManager getNodeManager()
+        + void browse(BrowseContext context, ViewDescription viewDescription, NodeId nodeId)
+        + void getReferences(BrowseContext context, ViewDescription viewDescription, NodeId nodeId)
+        + void registerNodes(RegisterNodesContext context, List<NodeId> nodeIds)
+        + void unregisterNodes(UnregisterNodesContext context, List<NodeId> nodeIds)
+        + void read(ReadContext context, Double maxAge, TimestampsToReturn timestamps, List<ReadValueId> readValueIds)
+        + void write(WriteContext context, List<WriteValue> writeValues)
+        + void call(CallContext context, List<CallMethodRequest> requests)
+        # Optional<MethodInvocationHandler> getInvocationHandler(NodeId objectId, NodeId methodId)
+    }
+    AddressSpace <|.. ManagedAddressSpace
+    org.eclipse.milo.opcua.sdk.server.OpcUaServer <-- ManagedAddressSpace
+    org.eclipse.milo.opcua.sdk.server.UaNodeManager <-- ManagedAddressSpace : Instantiate
+
+    abstract class ManagedAddressSpaceFragment {
+        ManagedAddressSpaceFragment(OpcUaServer server)
+        ManagedAddressSpaceFragment(OpcUaServer server, UaNodeManager nodeManager)
+
+    }
+    ManagedAddressSpace <|-- ManagedAddressSpaceFragment
+
+    abstract class ManagedNamespace {
+        ManagedNamespace(OpcUaServer server, String namespaceUri)
+        + AddressSpaceFilter getFilter()
+        + final String getNamespaceUri()
+        + final UShort getNamespaceIndex()
+        # final NodeId newNodeId(long id)
+        # final NodeId newNodeId(UInteger id)
+        # final NodeId newNodeId(UUID id)
+        # final NodeId newNodeId(ByteString id)
+        # final QualifiedName newQualifiedName(String name)
+    }
+    ManagedAddressSpaceFragment <|-- ManagedNamespace
+    Namespace <|.. ManagedNamespace
+
+
+    abstract class ManagedNamespaceWithLifecycle {
+        ManagedNamespaceWithLifecycle(OpcUaServer server, String namespaceUri)
+        + final void startup()
+        + final void shutdown()
+        # LifecycleManager getLifecycleManager()
+        # void registerAddressSpace(AddressSpaceFragment addressSpace)
+        # void unregisterAddressSpace(AddressSpaceFragment addressSpace)
+        # void registerNodeManager(UaNodeManager nodeManager)
+        # void unregisterNodeManager(UaNodeManager nodeManager)
+    }
+    ManagedNamespace <|-- ManagedNamespaceWithLifecycle
+    org.eclipse.milo.opcua.sdk.server.Lifecycle <|.. ManagedNamespaceWithLifecycle
+
+
+
+}
+
+@enduml
