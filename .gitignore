@@ -5,3 +5,4 @@ bazel-*
 .project
 docs/guia/target
 .~*
+out/

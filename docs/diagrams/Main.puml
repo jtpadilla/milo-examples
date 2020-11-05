@@ -114,6 +114,7 @@ namespace org.eclipse.milo.opcua.sdk.server.api {
 
     }
     ManagedAddressSpace <|-- ManagedAddressSpaceFragment
+    AddressSpaceFragment <|.. ManagedAddressSpaceFragment
 
     abstract class ManagedNamespace {
         ManagedNamespace(OpcUaServer server, String namespaceUri)
