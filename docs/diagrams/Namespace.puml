@@ -4,20 +4,26 @@
 namespace org.eclipse.milo.opcua.sdk.server.api.services {
 
     interface AttributeServices {
-        void read(ReadContext context, Double maxAge, TimestampsToReturn timestamps, List<ReadValueId> readValueIds)
-        void write(WriteContext context, List<WriteValue> writeValues)
+        'void read(ReadContext context, Double maxAge, TimestampsToReturn timestamps, List<ReadValueId> readValueIds)
+        'void write(WriteContext context, List<WriteValue> writeValues)
+        void read(..)
+        void write(..)
     }
 
     interface AttributeHistoryServices {
-        default void historyRead(HistoryReadContext context, HistoryReadDetails readDetails, TimestampsToReturn timestamps, List<HistoryReadValueId> readValueIds)
-        default void historyUpdate(HistoryUpdateContext context, List<HistoryUpdateDetails> updateDetails)
+        'default void historyRead(HistoryReadContext context, HistoryReadDetails readDetails, TimestampsToReturn timestamps, List<HistoryReadValueId> readValueIds)
+        'default void historyUpdate(HistoryUpdateContext context, List<HistoryUpdateDetails> updateDetails)
+        default void historyRead(..)
+        default void historyUpdate(..)
     }
 
     interface MethodServices {
-        void call(CallContext context, List<CallMethodRequest> requests)
+        'void call(CallContext context, List<CallMethodRequest> requests)
+        void call(..)
     }
 
     interface MonitoredItemServices {
+        /'
         default void onCreateDataItem(ReadValueId itemToMonitor, Double requestedSamplingInterval, UInteger requestedQueueSize, BiConsumer<Double, UInteger> revisionCallback)
         default void onModifyDataItem(ReadValueId itemToModify, Double requestedSamplingInterval, UInteger requestedQueueSize, BiConsumer<Double, UInteger> revisionCallback)
         default void onCreateEventItem(ReadValueId itemToMonitor, UInteger requestedQueueSize, Consumer<UInteger> revisionCallback)
@@ -29,22 +35,49 @@ namespace org.eclipse.milo.opcua.sdk.server.api.services {
         default void onEventItemsModified(List<EventItem> eventItems)
         default void onEventItemsDeleted(List<EventItem> eventItems)
         void onMonitoringModeChanged(List<MonitoredItem> monitoredItems)
+        '/
+
+        default void onCreateDataItem(..)
+        default void onModifyDataItem(..)
+        default void onCreateEventItem(..)
+        default void onModifyEventItem(..)
+        void onDataItemsCreated(..)
+        void onDataItemsModified(..)
+        void onDataItemsDeleted(..)
+        default void onEventItemsCreated(..)
+        default void onEventItemsModified(..)
+        default void onEventItemsDeleted(..)
+        void onMonitoringModeChanged(..)
     }
 
     interface NodeManagementServices {
+        /'
         default void addNodes(AddNodesContext context, List<AddNodesItem> nodesToAdd)
         default void deleteNodes(DeleteNodesContext context, List<DeleteNodesItem> nodesToDelete)
         default void addReferences(AddReferencesContext context, List<AddReferencesItem> referencesToAdd)
         default void deleteReferences(DeleteReferencesContext context, List<DeleteReferencesItem> referencesToDelete)
+        '/
+        default void addNodes(..)
+        default void deleteNodes(..)
+        default void addReferences(..)
+        default void deleteReferences(..)
     }
 
     interface ViewServices {
+        /'
         default void browse(BrowseContext context, NodeId nodeId)
         void browse(BrowseContext context, ViewDescription view, NodeId nodeId)
         void getReferences(BrowseContext context, ViewDescription view, NodeId nodeId)
         default void registerNodes(RegisterNodesContext context, List<NodeId> nodeIds)
         default void unregisterNodes(UnregisterNodesContext context, List<NodeId> nodeIds)
         default UInteger getViewCount()
+        '/
+        default void browse(..)
+        void browse(..)
+        void getReferences(..)
+        default void registerNodes(..)
+        default void unregisterNodes(..)
+        default UInteger getViewCount(..)
     }
 
 }
