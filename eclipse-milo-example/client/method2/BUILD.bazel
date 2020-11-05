@@ -1,0 +1,11 @@
+java_binary(
+    name = "method2",
+    srcs = glob(
+        ["src/main/java/**/*.java"],
+    ),
+    main_class = "org.eclipse.milo.examples.client.method2.MethodExample2",
+    deps = [
+        "//eclipse-milo-example/client/util",
+        "@maven//:org_eclipse_milo_sdk_core",
+    ],
+)

@@ -1,0 +1,18 @@
+package(default_visibility = ["//visibility:public"])
+
+java_library(
+    name = "other",
+    srcs = glob(
+        ["src/main/java/**/*.java"],
+    ),
+    deps = [
+        "//eclipse-milo-example/common",
+        "//eclipse-milo-example/server/util",
+        "@maven//:com_google_code_findbugs_jsr305",
+        "@maven//:com_google_guava_guava",
+        "@maven//:org_eclipse_milo_sdk_core",
+        "@maven//:org_eclipse_milo_sdk_server",
+        "@maven//:org_eclipse_milo_stack_core",
+        "@maven//:org_slf4j_slf4j_api",
+    ],
+)

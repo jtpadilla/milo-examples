@@ -1,0 +1,12 @@
+java_binary(
+    name = "unifiedautomationreadcustomdatatype",
+    srcs = glob(
+        ["src/main/java/**/*.java"],
+    ),
+    main_class = "org.eclipse.milo.examples.client.unifiedautomationreadcustomdatatype.UnifiedAutomationReadCustomDataTypeExample",
+    deps = [
+        "//eclipse-milo-example/client/util",
+        "@maven//:org_eclipse_milo_bsd_parser",
+        "@maven//:org_eclipse_milo_dictionary_reader",
+    ],
+)

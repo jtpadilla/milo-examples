@@ -1,0 +1,28 @@
+package(default_visibility = ["//visibility:public"])
+
+java_binary(
+    name = "server",
+    srcs = glob(
+        ["src/main/java/**/*.java"],
+    ),
+    main_class = "org.eclipse.milo.examples.server.Launcher",
+    resources = glob(
+        ["src/main/resources/**/*.*"],
+    ),
+    runtime_deps = [
+        "@maven//:org_slf4j_slf4j_jdk14",
+    ],
+    deps = [
+        "//eclipse-milo-example/common",
+        "//eclipse-milo-example/server/domain/helloworld",
+        "//eclipse-milo-example/server/util",
+        "@maven//:com_google_code_findbugs_jsr305",
+        "@maven//:com_google_guava_guava",
+        "@maven//:org_bouncycastle_bcprov_jdk15on",
+        "@maven//:org_eclipse_milo_dictionary_manager",
+        "@maven//:org_eclipse_milo_sdk_server",
+        "@maven//:org_eclipse_milo_stack_core",
+        "@maven//:org_eclipse_milo_stack_server",
+        "@maven//:org_slf4j_slf4j_api",
+    ],
+)

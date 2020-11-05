@@ -1,0 +1,10 @@
+java_binary(
+    name = "managedsubscriptionevent",
+    srcs = glob(
+        ["src/main/java/**/*.java"],
+    ),
+    main_class = "org.eclipse.milo.examples.client.managedsubscriptionevent.ManagedSubscriptionEventExample",
+    deps = [
+        "//eclipse-milo-example/client/util",
+    ],
+)

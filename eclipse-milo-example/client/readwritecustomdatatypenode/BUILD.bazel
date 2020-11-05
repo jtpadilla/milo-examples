@@ -1,0 +1,11 @@
+java_binary(
+    name = "readwritecustomdatatypenode",
+    srcs = glob(
+        ["src/main/java/**/*.java"],
+    ),
+    main_class = "org.eclipse.milo.examples.client.readwritecustomdatatypenode.ReadWriteCustomDataTypeNodeExample",
+    deps = [
+        "//eclipse-milo-example/client/util",
+        "//eclipse-milo-example/common",
+    ],
+)

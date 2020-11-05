@@ -1,0 +1,10 @@
+java_binary(
+    name = "managedsubscriptiondata",
+    srcs = glob(
+        ["src/main/java/**/*.java"],
+    ),
+    main_class = "org.eclipse.milo.examples.client.managedsubscriptiondata.ManagedSubscriptionDataExample",
+    deps = [
+        "//eclipse-milo-example/client/util",
+    ],
+)

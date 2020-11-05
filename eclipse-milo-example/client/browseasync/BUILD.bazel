@@ -1,0 +1,10 @@
+java_binary(
+    name = "browseasync",
+    srcs = glob(
+        ["src/main/java/**/*.java"],
+    ),
+    main_class = "org.eclipse.milo.examples.client.browseasync.BrowseAsyncExample",
+    deps = [
+        "//eclipse-milo-example/client/util",
+    ],
+)
