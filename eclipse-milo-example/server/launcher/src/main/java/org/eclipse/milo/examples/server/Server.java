@@ -2,6 +2,7 @@ package org.eclipse.milo.examples.server;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.eclipse.milo.examples.server.builder.Builder;
+import org.eclipse.milo.examples.server.namespace.Namespace;
 import org.eclipse.milo.opcua.sdk.server.OpcUaServer;
 import org.eclipse.milo.opcua.sdk.server.api.ManagedNamespaceWithLifecycle;
 import org.eclipse.milo.opcua.sdk.server.api.config.OpcUaServerConfig;
