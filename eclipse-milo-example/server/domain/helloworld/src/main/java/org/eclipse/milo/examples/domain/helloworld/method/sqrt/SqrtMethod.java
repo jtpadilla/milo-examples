@@ -42,4 +42,9 @@ public class SqrtMethod extends AbstractNodeDomainCloseable {
 
     }
 
+    @Override
+    public void uninstall() {
+
+    }
+
 }

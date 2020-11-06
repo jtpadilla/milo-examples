@@ -62,4 +62,9 @@ public class AdminWritableFolder extends AbstractNodeDomainCloseable {
 
     }
 
+    @Override
+    public void uninstall() {
+
+    }
+
 }

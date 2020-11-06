@@ -91,4 +91,9 @@ public class ScalarFolder extends AbstractNodeDomainCloseable {
 
     }
 
+    @Override
+    public void uninstall() {
+
+    }
+
 }

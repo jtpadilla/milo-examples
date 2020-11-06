@@ -41,4 +41,9 @@ public class GenerateEventMethod extends AbstractNodeDomainCloseable {
 
     }
 
+    @Override
+    public void uninstall() {
+
+    }
+
 }

@@ -96,4 +96,9 @@ public class ArrayFolder extends AbstractNodeDomainCloseable {
 
     }
 
+    @Override
+    public void uninstall() {
+
+    }
+
 }

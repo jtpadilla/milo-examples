@@ -69,4 +69,9 @@ public class DataAccessFolder extends AbstractNodeDomainCloseable {
 
     }
 
+    @Override
+    public void uninstall() {
+
+    }
+
 }

@@ -54,4 +54,9 @@ public class WriteOnlyFolder extends AbstractNodeDomainCloseable {
 
     }
 
+    @Override
+    public void uninstall() {
+
+    }
+
 }
