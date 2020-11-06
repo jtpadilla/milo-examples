@@ -21,7 +21,7 @@ import static org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.Unsigned.
 
 public class BogusEventNotifierTask implements Lifecycle {
 
-    static public Lifecycle instantiate(NamespaceContext namespaceContext) throws Exception {
+    static public Lifecycle instantiate(NamespaceContext namespaceContext) {
         return new BogusEventNotifierTask(namespaceContext);
     }
 

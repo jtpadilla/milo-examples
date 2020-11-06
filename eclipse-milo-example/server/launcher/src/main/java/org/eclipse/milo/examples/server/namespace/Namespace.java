@@ -32,15 +32,9 @@ public class Namespace extends ExampleNamespace {
         getLifecycleManager().addLifecycle(getDictionaryManager());
         getLifecycleManager().addLifecycle(subscriptionModel);
 
-        // se instalan los builders
-        getLifecycleManager().addStartupTask(this::createAndAddNodes);
+        // Se lanzan los contenedores principales
+        HelloWorldContainer.instantiate(getNamespaceContext(), getLifecycleManager());
 
-//        getLifecycleManager().addLifecycle(BogusEventNotifierTask.instantiate(getNamespaceContext()));
-
-    }
-
-    private void createAndAddNodes() {
-        this.helloWorldContainer = HelloWorldContainer.instantiate(getNamespaceContext());
     }
 
     @Override
