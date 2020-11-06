@@ -1,6 +1,7 @@
 package org.eclipse.milo.examples.domain.helloworld.folder.dataaccess;
 
 import org.eclipse.milo.examples.util.AbstractNodeDomainCloseable;
+import org.eclipse.milo.examples.util.DomainCloseable;
 import org.eclipse.milo.examples.util.NamespaceContext;
 import org.eclipse.milo.opcua.sdk.server.model.nodes.variables.AnalogItemTypeNode;
 import org.eclipse.milo.opcua.sdk.server.nodes.UaFolderNode;
@@ -18,9 +19,13 @@ public class DataAccessFolder extends AbstractNodeDomainCloseable {
 
     final private Logger logger = LoggerFactory.getLogger(getClass());
 
+    static public DomainCloseable instantiate(NamespaceContext namespaceContext, UaFolderNode parentFolderNode, UUID uuid) {
+        return new DataAccessFolder(namespaceContext, parentFolderNode, uuid);
+    }
+
     private UaFolderNode folderNode;
 
-    public DataAccessFolder(NamespaceContext namespaceContext, UaFolderNode parentFolderNode, UUID uuid) {
+    private DataAccessFolder(NamespaceContext namespaceContext, UaFolderNode parentFolderNode, UUID uuid) {
 
         super(namespaceContext);
 

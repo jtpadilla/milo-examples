@@ -11,8 +11,11 @@ import org.eclipse.milo.opcua.stack.core.types.builtin.LocalizedText;
 
 public class HelloWorldContainer extends AbstractNodeDomainCloseable {
 
-    final private NodeIdMostPartGenerator nodeIdGenerator;
-    final private HelloWorldFolderFactory factory;
+    static final private String FOLDER_NAME = "HelloWorld";
+
+    static public DomainCloseable instantiate(NamespaceContext namespaceContext) {
+        return new HelloWorldContainer(namespaceContext);
+    }
 
     final private UaFolderNode folderNode;
 
@@ -20,16 +23,11 @@ public class HelloWorldContainer extends AbstractNodeDomainCloseable {
 
         super(namespaceContext);
 
-        this.nodeIdGenerator = new NodeIdMostPartGenerator(FOLDER_CLASS_ID);
-        this.factory = new HelloWorldFolderFactory(getNamespaceContext(), nodeIdGenerator);
-
-        String folderName = String.format("HelloWorld");
-
         this.folderNode = new UaFolderNode(
                 getNodeContext(),
-                newNodeId(folderName),
-                newQualifiedName(folderName),
-                LocalizedText.english(folderName)
+                newNodeId(FOLDER_NAME),
+                newQualifiedName(FOLDER_NAME),
+                LocalizedText.english(FOLDER_NAME)
         );
 
         // y se incorpora el NodeManager
@@ -54,14 +52,16 @@ public class HelloWorldContainer extends AbstractNodeDomainCloseable {
     DomainCloseable f3;
 
     public void addChilds() {
-        f1 = factory.instantiate(1);
-        f2 = factory.instantiate(2);
-        f3 = factory.instantiate(3);
+        f1 = HelloWorldFolder.instantiate(getNamespaceContext(), FOLDER_NAME + "1", NodeIdMostPartGenerator.getInstance().getNext());
+        f2 = HelloWorldFolder.instantiate(getNamespaceContext(), FOLDER_NAME + "2", NodeIdMostPartGenerator.getInstance().getNext());
+        f3 = HelloWorldFolder.instantiate(getNamespaceContext(), FOLDER_NAME + "3", NodeIdMostPartGenerator.getInstance().getNext());
     }
 
     @Override
     public void uninstall() {
-
+        f1.uninstall();
+        f2.uninstall();
+        f3.uninstall();
     }
 
 }

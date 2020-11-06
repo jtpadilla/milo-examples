@@ -2,6 +2,7 @@ package org.eclipse.milo.examples.domain.helloworld.folder.dynamic;
 
 import org.eclipse.milo.examples.util.AbstractNodeDomainCloseable;
 import org.eclipse.milo.examples.util.AttributeLoggingFilter;
+import org.eclipse.milo.examples.util.DomainCloseable;
 import org.eclipse.milo.examples.util.NamespaceContext;
 import org.eclipse.milo.opcua.sdk.core.AccessLevel;
 import org.eclipse.milo.opcua.sdk.server.nodes.UaFolderNode;
@@ -18,11 +19,15 @@ import java.util.UUID;
 
 public class DynamicFolder extends AbstractNodeDomainCloseable {
 
+    static public DomainCloseable instantiate(NamespaceContext namespaceContext, UaFolderNode parentFolderNode, UUID uuid) {
+        return new DynamicFolder(namespaceContext, parentFolderNode, uuid);
+    }
+
     final private Random random = new Random();
 
     private UaFolderNode folderNode;
 
-    public DynamicFolder(NamespaceContext namespaceContext, UaFolderNode parentFolderNode, UUID uuid) {
+    private DynamicFolder(NamespaceContext namespaceContext, UaFolderNode parentFolderNode, UUID uuid) {
 
         super(namespaceContext);
 

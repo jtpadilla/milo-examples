@@ -2,6 +2,7 @@ package org.eclipse.milo.examples.domain.helloworld.folder.array;
 
 import org.eclipse.milo.examples.util.AbstractNodeDomainCloseable;
 import org.eclipse.milo.examples.util.AttributeLoggingFilter;
+import org.eclipse.milo.examples.util.DomainCloseable;
 import org.eclipse.milo.examples.util.NamespaceContext;
 import org.eclipse.milo.opcua.sdk.core.AccessLevel;
 import org.eclipse.milo.opcua.sdk.core.ValueRank;
@@ -18,6 +19,10 @@ import java.util.UUID;
 import static org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.Unsigned.*;
 
 public class ArrayFolder extends AbstractNodeDomainCloseable {
+
+    static public DomainCloseable instantiate(NamespaceContext namespaceContext, UaFolderNode parentFolderNode, UUID uuid) {
+        return new ArrayFolder(namespaceContext, parentFolderNode, uuid);
+    }
 
     private static final Object[][] STATIC_ARRAY_NODES = new Object[][]{
             {"BooleanArray", Identifiers.Boolean, false},
@@ -43,7 +48,7 @@ public class ArrayFolder extends AbstractNodeDomainCloseable {
 
     private UaFolderNode folderNode;
 
-    public ArrayFolder(NamespaceContext namespaceContext, UaFolderNode parentFolderNode, UUID uuid) {
+    private ArrayFolder(NamespaceContext namespaceContext, UaFolderNode parentFolderNode, UUID uuid) {
 
         super(namespaceContext);
 

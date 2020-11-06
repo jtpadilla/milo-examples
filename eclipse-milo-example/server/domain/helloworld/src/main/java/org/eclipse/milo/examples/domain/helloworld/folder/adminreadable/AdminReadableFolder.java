@@ -1,6 +1,7 @@
 package org.eclipse.milo.examples.domain.helloworld.folder.adminreadable;
 
 import org.eclipse.milo.examples.util.AbstractNodeDomainCloseable;
+import org.eclipse.milo.examples.util.DomainCloseable;
 import org.eclipse.milo.examples.util.NamespaceContext;
 import org.eclipse.milo.examples.util.RestrictedAccessFilter;
 import org.eclipse.milo.opcua.sdk.core.AccessLevel;
@@ -15,9 +16,13 @@ import java.util.UUID;
 
 public class AdminReadableFolder extends AbstractNodeDomainCloseable {
 
+    static public DomainCloseable instantiate(NamespaceContext namespaceContext, UaFolderNode parentFolderNode, UUID uuid) {
+        return new AdminReadableFolder(namespaceContext, parentFolderNode, uuid);
+    }
+
     final private UaFolderNode folderNode;
 
-    public AdminReadableFolder(NamespaceContext namespaceContext, UaFolderNode parentFolderNode, UUID uuid) {
+    private AdminReadableFolder(NamespaceContext namespaceContext, UaFolderNode parentFolderNode, UUID uuid) {
 
         super(namespaceContext);
 

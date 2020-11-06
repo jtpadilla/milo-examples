@@ -1,6 +1,7 @@
 package org.eclipse.milo.examples.domain.helloworld.method.generateevent;
 
 import org.eclipse.milo.examples.util.AbstractNodeDomainCloseable;
+import org.eclipse.milo.examples.util.DomainCloseable;
 import org.eclipse.milo.examples.util.NamespaceContext;
 import org.eclipse.milo.opcua.sdk.core.Reference;
 import org.eclipse.milo.opcua.sdk.server.nodes.UaFolderNode;
@@ -12,9 +13,13 @@ import java.util.UUID;
 
 public class GenerateEventMethod extends AbstractNodeDomainCloseable {
 
+    static public DomainCloseable instantiate(NamespaceContext namespaceContext, UaFolderNode parentFolderNode, UUID uuid) {
+        return new GenerateEventMethod(namespaceContext, parentFolderNode, uuid);
+    }
+
     final private UaMethodNode methodNode;
 
-    public GenerateEventMethod(NamespaceContext namespaceContext, UaFolderNode parentFolderNode, UUID uuid) {
+    private GenerateEventMethod(NamespaceContext namespaceContext, UaFolderNode parentFolderNode, UUID uuid) {
 
         super(namespaceContext);
 

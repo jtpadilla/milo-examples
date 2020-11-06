@@ -1,6 +1,7 @@
 package org.eclipse.milo.examples.domain.helloworld.folder.writeonly;
 
 import org.eclipse.milo.examples.util.AbstractNodeDomainCloseable;
+import org.eclipse.milo.examples.util.DomainCloseable;
 import org.eclipse.milo.examples.util.NamespaceContext;
 import org.eclipse.milo.opcua.sdk.core.AccessLevel;
 import org.eclipse.milo.opcua.sdk.server.nodes.UaFolderNode;
@@ -14,9 +15,13 @@ import java.util.UUID;
 
 public class WriteOnlyFolder extends AbstractNodeDomainCloseable {
 
+    static public DomainCloseable instantiate(NamespaceContext namespaceContext, UaFolderNode parentFolderNode, UUID uuid) {
+        return new WriteOnlyFolder(namespaceContext, parentFolderNode, uuid);
+    }
+
     private UaFolderNode folderNode;
 
-    public WriteOnlyFolder(NamespaceContext namespaceContext, UaFolderNode parentFolderNode, UUID uuid) {
+    private WriteOnlyFolder(NamespaceContext namespaceContext, UaFolderNode parentFolderNode, UUID uuid) {
 
         super(namespaceContext);
 

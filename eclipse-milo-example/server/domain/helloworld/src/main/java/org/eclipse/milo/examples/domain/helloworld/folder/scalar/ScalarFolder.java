@@ -2,6 +2,7 @@ package org.eclipse.milo.examples.domain.helloworld.folder.scalar;
 
 import org.eclipse.milo.examples.util.AbstractNodeDomainCloseable;
 import org.eclipse.milo.examples.util.AttributeLoggingFilter;
+import org.eclipse.milo.examples.util.DomainCloseable;
 import org.eclipse.milo.examples.util.NamespaceContext;
 import org.eclipse.milo.opcua.sdk.core.AccessLevel;
 import org.eclipse.milo.opcua.sdk.server.nodes.UaFolderNode;
@@ -43,9 +44,13 @@ public class ScalarFolder extends AbstractNodeDomainCloseable {
             {"UtcTime", Identifiers.UtcTime, new Variant(DateTime.now())},
     };
 
+    static public DomainCloseable instantiate(NamespaceContext namespaceContext, UaFolderNode parentFolderNode, UUID uuid) {
+        return new ScalarFolder(namespaceContext, parentFolderNode, uuid);
+    }
+
     private UaFolderNode folderNode;
 
-    public ScalarFolder(NamespaceContext namespaceContext, UaFolderNode parentFolderNode, UUID uuid) {
+    private ScalarFolder(NamespaceContext namespaceContext, UaFolderNode parentFolderNode, UUID uuid) {
 
         super(namespaceContext);
 

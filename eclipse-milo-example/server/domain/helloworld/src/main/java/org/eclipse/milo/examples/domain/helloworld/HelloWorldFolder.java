@@ -1,14 +1,14 @@
 package org.eclipse.milo.examples.domain.helloworld;
 
-import org.eclipse.milo.examples.domain.helloworld.folder.adminreadable.AdminReadableFolderFactory;
-import org.eclipse.milo.examples.domain.helloworld.folder.adminwritable.AdminWritableFolderFactory;
-import org.eclipse.milo.examples.domain.helloworld.folder.array.ArrayFolderFactory;
-import org.eclipse.milo.examples.domain.helloworld.folder.dataaccess.DataAccessFolderFactory;
-import org.eclipse.milo.examples.domain.helloworld.folder.dynamic.DynamicFolderFactory;
-import org.eclipse.milo.examples.domain.helloworld.folder.scalar.ScalarFolderFactory;
-import org.eclipse.milo.examples.domain.helloworld.folder.writeonly.WriteOnlyFolderFactory;
-import org.eclipse.milo.examples.domain.helloworld.method.generateevent.GenerateEventMethodFactory;
-import org.eclipse.milo.examples.domain.helloworld.method.sqrt.SqrtMethodFactory;
+import org.eclipse.milo.examples.domain.helloworld.folder.adminreadable.AdminReadableFolder;
+import org.eclipse.milo.examples.domain.helloworld.folder.adminwritable.AdminWritableFolder;
+import org.eclipse.milo.examples.domain.helloworld.folder.array.ArrayFolder;
+import org.eclipse.milo.examples.domain.helloworld.folder.dataaccess.DataAccessFolder;
+import org.eclipse.milo.examples.domain.helloworld.folder.dynamic.DynamicFolder;
+import org.eclipse.milo.examples.domain.helloworld.folder.scalar.ScalarFolder;
+import org.eclipse.milo.examples.domain.helloworld.folder.writeonly.WriteOnlyFolder;
+import org.eclipse.milo.examples.domain.helloworld.method.generateevent.GenerateEventMethod;
+import org.eclipse.milo.examples.domain.helloworld.method.sqrt.SqrtMethod;
 import org.eclipse.milo.examples.util.AbstractNodeDomainCloseable;
 import org.eclipse.milo.examples.util.DomainCloseable;
 import org.eclipse.milo.examples.util.NamespaceContext;
@@ -16,8 +16,6 @@ import org.eclipse.milo.opcua.sdk.core.Reference;
 import org.eclipse.milo.opcua.sdk.server.nodes.UaFolderNode;
 import org.eclipse.milo.opcua.stack.core.Identifiers;
 import org.eclipse.milo.opcua.stack.core.types.builtin.LocalizedText;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,43 +34,25 @@ public class HelloWorldFolder extends AbstractNodeDomainCloseable {
     static final long SQRT_METHOD_LEAST = 0x1000;
     static final long GENERATE_EVENT_METHOD_LEAST = 0x1001;
 
-    final private Logger logger = LoggerFactory.getLogger(getClass());
+    static public DomainCloseable instantiate(NamespaceContext namespaceContext, String canonicalName, long globalId) {
+        return new HelloWorldFolder(namespaceContext, canonicalName, globalId);
+    }
 
+    final private long globalId;
     final private UaFolderNode folderNode;
+    final private List<DomainCloseable> closeableNodes = new ArrayList<>();
 
-    final private AdminReadableFolderFactory adminReadableFolderFactory;
-    final private AdminWritableFolderFactory adminWritableFolderFactory;
-    final private ArrayFolderFactory arrayFolderFactory;
-    final private DataAccessFolderFactory dataAccessFolderFactory;
-    final private DynamicFolderFactory dynamicFolderFactory;
-    final private ScalarFolderFactory scalarFolderFactory;
-    final private WriteOnlyFolderFactory writeOnlyFolderFactory;
-
-    final private SqrtMethodFactory sqrtMethodFactory;
-    final private GenerateEventMethodFactory generateEventMethodNodeFactory;
-
-    private List<DomainCloseable> closeableNodes;
-
-    HelloWorldFolder(NamespaceContext namespaceContext, String relativeName, long globalId) {
+    HelloWorldFolder(NamespaceContext namespaceContext, String canonicalName, long globalId) {
 
         super(namespaceContext);
-        this.closeableNodes = new ArrayList<>();
 
-        adminReadableFolderFactory = new AdminReadableFolderFactory(namespaceContext, new UUID(globalId, ADMIN_READABLE_FOLDER_LEAST));
-        adminWritableFolderFactory = new AdminWritableFolderFactory(namespaceContext, new UUID(globalId, ADMIN_WRITABLE_FOLDER_LEAST));
-        arrayFolderFactory = new ArrayFolderFactory(namespaceContext, new UUID(globalId, ARRAY_FOLDER_LEAST));
-        dataAccessFolderFactory = new DataAccessFolderFactory(namespaceContext, new UUID(globalId, DATA_ACCESS_FOLDER_LEAST));
-        dynamicFolderFactory = new DynamicFolderFactory(namespaceContext, new UUID(globalId, DYNAMIC_FOLDER_LEAST));
-        generateEventMethodNodeFactory = new GenerateEventMethodFactory(namespaceContext, new UUID(globalId, GENERATE_EVENT_METHOD_LEAST));
-        scalarFolderFactory = new ScalarFolderFactory(namespaceContext, new UUID(globalId, SCALAR_FOLDER_LEAST));
-        sqrtMethodFactory = new SqrtMethodFactory(namespaceContext, new UUID(globalId, SQRT_METHOD_LEAST));
-        writeOnlyFolderFactory = new WriteOnlyFolderFactory(namespaceContext, new UUID(globalId, WRITE_ONLY_FOLDER_LEAST));
+        this.globalId = globalId;
 
         this.folderNode = new UaFolderNode(
                 getNodeContext(),
-                newNodeId(relativeName),
-                newQualifiedName(relativeName),
-                LocalizedText.english(relativeName)
+                newNodeId(canonicalName),
+                newQualifiedName(canonicalName),
+                LocalizedText.english(canonicalName)
         );
 
         // y se incorpora el NodeManager
@@ -93,15 +73,18 @@ public class HelloWorldFolder extends AbstractNodeDomainCloseable {
     }
 
     private void addChilds() {
-        closeableNodes.add(adminReadableFolderFactory.instantiate(folderNode));
-        closeableNodes.add(adminWritableFolderFactory.instantiate(folderNode));
-        closeableNodes.add(arrayFolderFactory.instantiate(folderNode));
-        closeableNodes.add(dataAccessFolderFactory.instantiate(folderNode));
-        closeableNodes.add(dynamicFolderFactory.instantiate(folderNode));
-        closeableNodes.add(generateEventMethodNodeFactory.instantiate(folderNode));
-        closeableNodes.add(scalarFolderFactory.instantiate(folderNode));
-        closeableNodes.add(sqrtMethodFactory.instantiate(folderNode));
-        closeableNodes.add(writeOnlyFolderFactory.instantiate(folderNode));
+
+        closeableNodes.add(AdminReadableFolder.instantiate(getNamespaceContext(), folderNode, new UUID(globalId, ADMIN_READABLE_FOLDER_LEAST)));
+        closeableNodes.add(AdminWritableFolder.instantiate(getNamespaceContext(), folderNode, new UUID(globalId, ADMIN_WRITABLE_FOLDER_LEAST)));
+        closeableNodes.add(ArrayFolder.instantiate(getNamespaceContext(), folderNode, new UUID(globalId, ARRAY_FOLDER_LEAST)));
+        closeableNodes.add(DataAccessFolder.instantiate(getNamespaceContext(), folderNode, new UUID(globalId, DATA_ACCESS_FOLDER_LEAST)));
+        closeableNodes.add(DynamicFolder.instantiate(getNamespaceContext(), folderNode, new UUID(globalId, DYNAMIC_FOLDER_LEAST)));
+        closeableNodes.add(ScalarFolder.instantiate(getNamespaceContext(), folderNode, new UUID(globalId, SCALAR_FOLDER_LEAST)));
+        closeableNodes.add(WriteOnlyFolder.instantiate(getNamespaceContext(), folderNode, new UUID(globalId, WRITE_ONLY_FOLDER_LEAST)));
+
+        closeableNodes.add(SqrtMethod.instantiate(getNamespaceContext(), folderNode, new UUID(globalId, SQRT_METHOD_LEAST)));
+        closeableNodes.add(GenerateEventMethod.instantiate(getNamespaceContext(), folderNode, new UUID(globalId, GENERATE_EVENT_METHOD_LEAST)));
+
     }
 
     @Override
@@ -113,7 +96,7 @@ public class HelloWorldFolder extends AbstractNodeDomainCloseable {
         }
 
         // Despues el padre
-        // TODO:...
+        getNodeManager().removeNode(folderNode);
 
     }
 

@@ -1,11 +1,8 @@
 package org.eclipse.milo.examples.server.namespace;
 
 import org.eclipse.milo.examples.common.types.NamespaceConstants;
-import org.eclipse.milo.examples.domain.helloworld.HelloWorldFolderFactory;
+import org.eclipse.milo.examples.domain.helloworld.HelloWorldContainer;
 import org.eclipse.milo.examples.domain.helloworld.task.boguseventnotifier.BogusEventNotifierTask;
-import org.eclipse.milo.examples.domain.helloworld.type.customstruct.CustomStructTypeFactory;
-import org.eclipse.milo.examples.domain.helloworld.type.customunion.CustomUnionTypeFactory;
-import org.eclipse.milo.examples.domain.helloworld.type.custonenum.CustomEnumTypeFactory;
 import org.eclipse.milo.examples.util.DomainCloseable;
 import org.eclipse.milo.examples.util.ExampleNamespace;
 import org.eclipse.milo.opcua.sdk.server.OpcUaServer;
@@ -19,15 +16,15 @@ public class Namespace extends ExampleNamespace {
 
     static final public String NAMESPACE_URI = NamespaceConstants.NAMESPACE_URI;
 
+    static public Namespace instantiate(OpcUaServer server) {
+        return new Namespace(server);
+    }
+
     final private SubscriptionModel subscriptionModel;
 
-    // Builders
-    final private HelloWorldFolderFactory helloWorldFolderFactory;
+    private DomainCloseable helloWorldContainer;
 
-    // Nodos principales
-    private DomainCloseable helloWorldFolder;
-
-    public Namespace(OpcUaServer server) throws Exception {
+    public Namespace(OpcUaServer server) {
 
         super(server, NAMESPACE_URI);
 
@@ -36,31 +33,15 @@ public class Namespace extends ExampleNamespace {
         getLifecycleManager().addLifecycle(getDictionaryManager());
         getLifecycleManager().addLifecycle(subscriptionModel);
 
-        // Secrean los builders
-        this.helloWorldFolderFactory = new HelloWorldFolderFactory(getNamespaceContext());
-
         // se instalan los builders
         getLifecycleManager().addStartupTask(this::createAndAddNodes);
 
-        getLifecycleManager().addLifecycle(BogusEventNotifierTask.instantiate(getNamespaceContext()));
+//        getLifecycleManager().addLifecycle(BogusEventNotifierTask.instantiate(getNamespaceContext()));
 
     }
 
     private void createAndAddNodes() {
-
-        try {
-            // Se registra los tipos
-            CustomEnumTypeFactory.register(getNamespaceContext());
-            CustomStructTypeFactory.register(getNamespaceContext());
-            CustomUnionTypeFactory.register(getNamespaceContext());
-
-            // Se crean las carpetas principales
-            this.helloWorldFolder = helloWorldFolderFactory.instantiate(1);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
+        this.helloWorldContainer = HelloWorldContainer.instantiate(getNamespaceContext());
     }
 
     @Override
