@@ -26,12 +26,13 @@ public class HelloWorldContainer extends AbstractNodeDomainCloseable {
     public HelloWorldContainer(NamespaceContext namespaceContext, LifecycleManager lifecycleManager) {
 
         super(namespaceContext);
+
         this.lifecycleManager = lifecycleManager;
 
         this.lifecycleManager.addShutdownTask(this::uninstall);
         this.lifecycleManager.addStartupTask(this::install);
-        this.lifecycleManager.addLifecycle(BogusEventNotifierTask.instantiate(getNamespaceContext()));
 
+        this.lifecycleManager.addLifecycle(BogusEventNotifierTask.instantiate(getNamespaceContext()));
 
     }
 

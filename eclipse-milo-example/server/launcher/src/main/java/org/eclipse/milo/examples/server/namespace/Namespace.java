@@ -21,8 +21,6 @@ public class Namespace extends ExampleNamespace {
 
     final private SubscriptionModel subscriptionModel;
 
-    private DomainCloseable helloWorldContainer;
-
     public Namespace(OpcUaServer server) {
 
         super(server, NAMESPACE_URI);
