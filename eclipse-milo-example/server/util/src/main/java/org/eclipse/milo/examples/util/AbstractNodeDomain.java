@@ -5,8 +5,10 @@ import org.eclipse.milo.opcua.sdk.server.UaNodeManager;
 import org.eclipse.milo.opcua.sdk.server.api.DataTypeDictionaryManager;
 import org.eclipse.milo.opcua.sdk.server.nodes.UaNodeContext;
 import org.eclipse.milo.opcua.sdk.server.nodes.factories.NodeFactory;
+import org.eclipse.milo.opcua.stack.core.types.builtin.ByteString;
 import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
 import org.eclipse.milo.opcua.stack.core.types.builtin.QualifiedName;
+import org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.UInteger;
 import org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.UShort;
 
 import java.util.UUID;
@@ -42,6 +44,21 @@ abstract public class AbstractNodeDomain implements NamespaceContext {
     @Override
     public NodeId newNodeId(UUID uuid) {
         return namespaceContext.newNodeId(uuid);
+    }
+
+    @Override
+    public NodeId newNodeId(long id) {
+        return namespaceContext.newNodeId(id);
+    }
+
+    @Override
+    public NodeId newNodeId(UInteger id) {
+        return namespaceContext.newNodeId(id);
+    }
+
+    @Override
+    public NodeId newNodeId(ByteString id) {
+        return namespaceContext.newNodeId(id);
     }
 
     @Override

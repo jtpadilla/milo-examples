@@ -6,8 +6,10 @@ import org.eclipse.milo.opcua.sdk.server.api.DataTypeDictionaryManager;
 import org.eclipse.milo.opcua.sdk.server.api.ManagedNamespaceWithLifecycle;
 import org.eclipse.milo.opcua.sdk.server.nodes.UaNodeContext;
 import org.eclipse.milo.opcua.sdk.server.nodes.factories.NodeFactory;
+import org.eclipse.milo.opcua.stack.core.types.builtin.ByteString;
 import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
 import org.eclipse.milo.opcua.stack.core.types.builtin.QualifiedName;
+import org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.UInteger;
 import org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.UShort;
 
 import java.util.UUID;
@@ -41,8 +43,23 @@ abstract public class ExampleNamespace extends ManagedNamespaceWithLifecycle {
             }
 
             @Override
+            public NodeId newNodeId(long id) {
+                return ExampleNamespace.this.newNodeId(id);
+            }
+
+            @Override
+            public NodeId newNodeId(UInteger id) {
+                return ExampleNamespace.this.newNodeId(id);
+            }
+
+            @Override
             public NodeId newNodeId(UUID uuid) {
                 return ExampleNamespace.this.newNodeId(uuid);
+            }
+
+            @Override
+            public NodeId newNodeId(ByteString id) {
+                return ExampleNamespace.this.newNodeId(id);
             }
 
             @Override
