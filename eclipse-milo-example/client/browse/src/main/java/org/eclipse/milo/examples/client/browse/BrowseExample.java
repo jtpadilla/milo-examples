@@ -14,7 +14,10 @@ import org.eclipse.milo.examples.client.util.ClientExample;
 import org.eclipse.milo.examples.client.util.ClientExampleRunner;
 import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
 import org.eclipse.milo.opcua.stack.core.Identifiers;
+import org.eclipse.milo.opcua.stack.core.types.builtin.ExpandedNodeId;
+import org.eclipse.milo.opcua.stack.core.types.builtin.LocalizedText;
 import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
+import org.eclipse.milo.opcua.stack.core.types.builtin.QualifiedName;
 import org.eclipse.milo.opcua.stack.core.types.enumerated.BrowseDirection;
 import org.eclipse.milo.opcua.stack.core.types.enumerated.BrowseResultMask;
 import org.eclipse.milo.opcua.stack.core.types.enumerated.NodeClass;
@@ -34,15 +37,14 @@ import static org.eclipse.milo.opcua.stack.core.util.ConversionUtil.toList;
 public class BrowseExample implements ClientExample {
 
     public static void main(String[] args) throws Exception {
-        BrowseExample example = new BrowseExample();
-
-        new ClientExampleRunner(example).run();
+        new ClientExampleRunner(new BrowseExample()).run();
     }
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
     public void run(OpcUaClient client, CompletableFuture<OpcUaClient> future) throws Exception {
+
         // synchronous connect
         client.connect().get();
 
@@ -68,7 +70,9 @@ public class BrowseExample implements ClientExample {
             List<ReferenceDescription> references = toList(browseResult.getReferences());
 
             for (ReferenceDescription rd : references) {
-                logger.info("{} Node={}", indent, rd.getBrowseName().getName());
+                System.out.println(
+                    String.format("%s %s", indent, referenceDescriptionToString(rd))
+                );
 
                 // recursively browse to children
                 rd.getNodeId().local(client.getNamespaceTable())
@@ -77,6 +81,21 @@ public class BrowseExample implements ClientExample {
         } catch (InterruptedException | ExecutionException e) {
             logger.error("Browsing nodeId={} failed: {}", browseRoot, e.getMessage(), e);
         }
+    }
+
+    private String referenceDescriptionToString(ReferenceDescription referenceDescription) {
+
+        QualifiedName browseName = referenceDescription.getBrowseName();
+        LocalizedText displayName = referenceDescription.getDisplayName();
+        ExpandedNodeId nodeId = referenceDescription.getNodeId();
+
+        return String.format("browseName=%s, displayName[%s]=%s, nodeId=%s",
+                browseName.getName(),
+                displayName.getLocale(),
+                displayName.getText(),
+                nodeId.toString()
+        );
+
     }
 
 }
