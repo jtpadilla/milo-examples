@@ -2,7 +2,6 @@ package org.eclipse.milo.examples.server.namespace;
 
 import org.eclipse.milo.examples.common.types.NamespaceConstants;
 import org.eclipse.milo.examples.domain.helloworld.HelloWorldContainer;
-import org.eclipse.milo.examples.domain.helloworld.task.boguseventnotifier.BogusEventNotifierTask;
 import org.eclipse.milo.examples.util.DomainCloseable;
 import org.eclipse.milo.examples.util.ExampleNamespace;
 import org.eclipse.milo.opcua.sdk.server.OpcUaServer;
