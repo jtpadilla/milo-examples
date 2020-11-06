@@ -52,9 +52,9 @@ public class HelloWorldContainer extends AbstractNodeDomainCloseable {
     DomainCloseable f3;
 
     public void addChilds() {
-        f1 = HelloWorldFolder.instantiate(getNamespaceContext(), FOLDER_NAME + "1", NodeIdMostPartGenerator.getInstance().getNext());
-        f2 = HelloWorldFolder.instantiate(getNamespaceContext(), FOLDER_NAME + "2", NodeIdMostPartGenerator.getInstance().getNext());
-        f3 = HelloWorldFolder.instantiate(getNamespaceContext(), FOLDER_NAME + "3", NodeIdMostPartGenerator.getInstance().getNext());
+        f1 = HelloWorldFolder.instantiate(getNamespaceContext(), folderNode, FOLDER_NAME + "1", NodeIdMostPartGenerator.getInstance().getNext());
+        f2 = HelloWorldFolder.instantiate(getNamespaceContext(), folderNode, FOLDER_NAME + "2", NodeIdMostPartGenerator.getInstance().getNext());
+        f3 = HelloWorldFolder.instantiate(getNamespaceContext(), folderNode, FOLDER_NAME + "3", NodeIdMostPartGenerator.getInstance().getNext());
     }
 
     @Override

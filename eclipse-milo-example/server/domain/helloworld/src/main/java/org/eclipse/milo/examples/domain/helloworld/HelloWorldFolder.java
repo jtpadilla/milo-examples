@@ -34,15 +34,15 @@ public class HelloWorldFolder extends AbstractNodeDomainCloseable {
     static final long SQRT_METHOD_LEAST = 0x1000;
     static final long GENERATE_EVENT_METHOD_LEAST = 0x1001;
 
-    static public DomainCloseable instantiate(NamespaceContext namespaceContext, String canonicalName, long globalId) {
-        return new HelloWorldFolder(namespaceContext, canonicalName, globalId);
+    static public DomainCloseable instantiate(NamespaceContext namespaceContext, UaFolderNode parentFolderNode, String canonicalName, long globalId) {
+        return new HelloWorldFolder(namespaceContext, parentFolderNode, canonicalName, globalId);
     }
 
     final private long globalId;
     final private UaFolderNode folderNode;
     final private List<DomainCloseable> closeableNodes = new ArrayList<>();
 
-    HelloWorldFolder(NamespaceContext namespaceContext, String canonicalName, long globalId) {
+    HelloWorldFolder(NamespaceContext namespaceContext, UaFolderNode parentFolderNode, String canonicalName, long globalId) {
 
         super(namespaceContext);
 
@@ -59,14 +59,7 @@ public class HelloWorldFolder extends AbstractNodeDomainCloseable {
         getNodeManager().addNode(folderNode);
 
         // La nueva carpeta se mostrara dentro de la carpeta 'Objects' del servidor.
-        folderNode.addReference(
-                new Reference(
-                        this.folderNode.getNodeId(),
-                        Identifiers.Organizes,
-                        Identifiers.ObjectsFolder.expanded(),
-                        false
-                )
-        );
+        parentFolderNode.addOrganizes(this.folderNode);
 
         addChilds();
 
