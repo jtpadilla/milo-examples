@@ -14,6 +14,7 @@ import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
 import org.eclipse.milo.opcua.stack.core.types.builtin.Variant;
 
 import java.util.Random;
+import java.util.UUID;
 
 public class DynamicFolder extends AbstractNodeDomainCloseable {
 
@@ -21,13 +22,13 @@ public class DynamicFolder extends AbstractNodeDomainCloseable {
 
     private UaFolderNode folderNode;
 
-    public DynamicFolder(NamespaceContext namespaceContext, UaFolderNode parentFolderNode) {
+    public DynamicFolder(NamespaceContext namespaceContext, UaFolderNode parentFolderNode, UUID uuid) {
 
         super(namespaceContext);
 
         this.folderNode = new UaFolderNode(
                 getNodeContext(),
-                newNodeId("HelloWorld/Dynamic"),
+                newNodeId(uuid),
                 newQualifiedName("Dynamic"),
                 LocalizedText.english("Dynamic")
         );

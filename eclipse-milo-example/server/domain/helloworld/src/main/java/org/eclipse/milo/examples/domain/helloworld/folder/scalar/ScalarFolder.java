@@ -45,13 +45,13 @@ public class ScalarFolder extends AbstractNodeDomainCloseable {
 
     private UaFolderNode folderNode;
 
-    public ScalarFolder(NamespaceContext namespaceContext, UaFolderNode parentFolderNode) {
+    public ScalarFolder(NamespaceContext namespaceContext, UaFolderNode parentFolderNode, UUID uuid) {
 
         super(namespaceContext);
 
         this.folderNode = new UaFolderNode(
                 getNodeContext(),
-                newNodeId("HelloWorld/ScalarTypes"),
+                newNodeId(uuid),
                 newQualifiedName("ScalarTypes"),
                 LocalizedText.english("ScalarTypes")
         );

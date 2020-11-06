@@ -12,19 +12,21 @@ import org.eclipse.milo.opcua.stack.core.types.structured.Range;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.UUID;
+
 public class DataAccessFolder extends AbstractNodeDomainCloseable {
 
     final private Logger logger = LoggerFactory.getLogger(getClass());
 
     private UaFolderNode folderNode;
 
-    public DataAccessFolder(NamespaceContext namespaceContext, UaFolderNode parentFolderNode) {
+    public DataAccessFolder(NamespaceContext namespaceContext, UaFolderNode parentFolderNode, UUID uuid) {
 
         super(namespaceContext);
 
         this.folderNode = new UaFolderNode(
                 getNodeContext(),
-                newNodeId("HelloWorld/DataAccess"),
+                newNodeId(uuid),
                 newQualifiedName("DataAccess"),
                 LocalizedText.english("DataAccess")
         );

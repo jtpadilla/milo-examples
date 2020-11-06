@@ -21,6 +21,10 @@ abstract public class AbstractNodeDomain implements NamespaceContext {
         this.namespaceContext = namespaceContext;
     }
 
+    public NamespaceContext getNamespaceContext() {
+        return namespaceContext;
+    }
+
     @Override
     public UaNodeManager getNodeManager() {
         return namespaceContext.getNodeManager();

@@ -10,17 +10,19 @@ import org.eclipse.milo.opcua.stack.core.types.builtin.DataValue;
 import org.eclipse.milo.opcua.stack.core.types.builtin.LocalizedText;
 import org.eclipse.milo.opcua.stack.core.types.builtin.Variant;
 
+import java.util.UUID;
+
 public class WriteOnlyFolder extends AbstractNodeDomainCloseable {
 
     private UaFolderNode folderNode;
 
-    public WriteOnlyFolder(NamespaceContext namespaceContext, UaFolderNode parentFolderNode) {
+    public WriteOnlyFolder(NamespaceContext namespaceContext, UaFolderNode parentFolderNode, UUID uuid) {
 
         super(namespaceContext);
 
         this.folderNode = new UaFolderNode(
                 getNodeContext(),
-                newNodeId("HelloWorld/WriteOnly"),
+                newNodeId(uuid),
                 newQualifiedName("WriteOnly"),
                 LocalizedText.english("WriteOnly")
         );

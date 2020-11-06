@@ -43,13 +43,13 @@ public class ArrayFolder extends AbstractNodeDomainCloseable {
 
     private UaFolderNode folderNode;
 
-    public ArrayFolder(NamespaceContext namespaceContext, UaFolderNode parentFolderNode) {
+    public ArrayFolder(NamespaceContext namespaceContext, UaFolderNode parentFolderNode, UUID uuid) {
 
         super(namespaceContext);
 
         this.folderNode = new UaFolderNode(
                 getNodeContext(),
-                newNodeId("HelloWorld/ArrayTypes"),
+                newNodeId(uuid),
                 newQualifiedName("ArrayTypes"),
                 LocalizedText.english("ArrayTypes")
         );

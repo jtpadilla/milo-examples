@@ -9,9 +9,6 @@ import org.eclipse.milo.examples.domain.helloworld.folder.scalar.ScalarFolderFac
 import org.eclipse.milo.examples.domain.helloworld.folder.writeonly.WriteOnlyFolderFactory;
 import org.eclipse.milo.examples.domain.helloworld.method.generateevent.GenerateEventMethodFactory;
 import org.eclipse.milo.examples.domain.helloworld.method.sqrt.SqrtMethodFactory;
-import org.eclipse.milo.examples.domain.helloworld.type.customstruct.CustomStructTypeFactory;
-import org.eclipse.milo.examples.domain.helloworld.type.customunion.CustomUnionTypeFactory;
-import org.eclipse.milo.examples.domain.helloworld.type.custonenum.CustomEnumTypeFactory;
 import org.eclipse.milo.examples.util.AbstractNodeDomainCloseable;
 import org.eclipse.milo.examples.util.DomainCloseable;
 import org.eclipse.milo.examples.util.NamespaceContext;
@@ -22,65 +19,60 @@ import org.eclipse.milo.opcua.stack.core.types.builtin.LocalizedText;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
 public class HelloWorldFolder extends AbstractNodeDomainCloseable {
+
+    static final long ADMIN_READABLE_FOLDER_LEAST = 0x0000;
+    static final long ADMIN_WRITABLE_FOLDER_LEAST = 0x0001;
+    static final long ARRAY_FOLDER_LEAST = 0x0002;
+    static final long DATA_ACCESS_FOLDER_LEAST = 0x0003;
+    static final long DYNAMIC_FOLDER_LEAST = 0x0004;
+    static final long SCALAR_FOLDER_LEAST = 0x0005;
+    static final long WRITE_ONLY_FOLDER_LEAST = 0x0006;
+
+    static final long SQRT_METHOD_LEAST = 0x1000;
+    static final long GENERATE_EVENT_METHOD_LEAST = 0x1001;
 
     final private Logger logger = LoggerFactory.getLogger(getClass());
 
     final private UaFolderNode folderNode;
-
-    // Factory
-    final private CustomEnumTypeFactory customEnumTypeFactory;
-    final private CustomStructTypeFactory customStructTypeFactory;
-    final private CustomUnionTypeFactory customUnionTypeFactory;
 
     final private AdminReadableFolderFactory adminReadableFolderFactory;
     final private AdminWritableFolderFactory adminWritableFolderFactory;
     final private ArrayFolderFactory arrayFolderFactory;
     final private DataAccessFolderFactory dataAccessFolderFactory;
     final private DynamicFolderFactory dynamicFolderFactory;
-    final private GenerateEventMethodFactory generateEventMethodNodeFactory;
     final private ScalarFolderFactory scalarFolderFactory;
-    final private SqrtMethodFactory sqrtMethodFactory;
     final private WriteOnlyFolderFactory writeOnlyFolderFactory;
 
-    // Instances
-    private DomainCloseable customEnumTypeInstance;
-    private DomainCloseable customStructTypeInstance;
-    private DomainCloseable customUnionTypeInstance;
+    final private SqrtMethodFactory sqrtMethodFactory;
+    final private GenerateEventMethodFactory generateEventMethodNodeFactory;
 
-    private DomainCloseable adminReadableNodesFolder;
-    private DomainCloseable adminWritableNodesFolder;
-    private DomainCloseable arrayFolder;
-    private DomainCloseable dataAccessNodesFolder;
-    private DomainCloseable dynamicFolder;
-    private DomainCloseable generateEventMethodNode;
-    private DomainCloseable scalarFolder;
-    private DomainCloseable sqrtMethod;
-    private DomainCloseable writeOnlyFolder;
+    private List<DomainCloseable> closeableNodes;
 
-    HelloWorldFolder(NamespaceContext namespaceContext) {
+    HelloWorldFolder(NamespaceContext namespaceContext, String relativeName, long globalId) {
 
         super(namespaceContext);
+        this.closeableNodes = new ArrayList<>();
 
-        customEnumTypeFactory = new CustomEnumTypeFactory(namespaceContext);
-        customStructTypeFactory = new CustomStructTypeFactory(namespaceContext);
-        customUnionTypeFactory = new CustomUnionTypeFactory(namespaceContext);
-
-        adminReadableFolderFactory = new AdminReadableFolderFactory(namespaceContext);
-        adminWritableFolderFactory = new AdminWritableFolderFactory(namespaceContext);
-        arrayFolderFactory = new ArrayFolderFactory(namespaceContext);
-        dataAccessFolderFactory = new DataAccessFolderFactory(namespaceContext);
-        dynamicFolderFactory = new DynamicFolderFactory(namespaceContext);
-        generateEventMethodNodeFactory = new GenerateEventMethodFactory(namespaceContext);
-        scalarFolderFactory = new ScalarFolderFactory(namespaceContext);
-        sqrtMethodFactory = new SqrtMethodFactory(namespaceContext);
-        writeOnlyFolderFactory = new WriteOnlyFolderFactory(namespaceContext);
+        adminReadableFolderFactory = new AdminReadableFolderFactory(namespaceContext, new UUID(globalId, ADMIN_READABLE_FOLDER_LEAST));
+        adminWritableFolderFactory = new AdminWritableFolderFactory(namespaceContext, new UUID(globalId, ADMIN_WRITABLE_FOLDER_LEAST));
+        arrayFolderFactory = new ArrayFolderFactory(namespaceContext, new UUID(globalId, ARRAY_FOLDER_LEAST));
+        dataAccessFolderFactory = new DataAccessFolderFactory(namespaceContext, new UUID(globalId, DATA_ACCESS_FOLDER_LEAST));
+        dynamicFolderFactory = new DynamicFolderFactory(namespaceContext, new UUID(globalId, DYNAMIC_FOLDER_LEAST));
+        generateEventMethodNodeFactory = new GenerateEventMethodFactory(namespaceContext, new UUID(globalId, GENERATE_EVENT_METHOD_LEAST));
+        scalarFolderFactory = new ScalarFolderFactory(namespaceContext, new UUID(globalId, SCALAR_FOLDER_LEAST));
+        sqrtMethodFactory = new SqrtMethodFactory(namespaceContext, new UUID(globalId, SQRT_METHOD_LEAST));
+        writeOnlyFolderFactory = new WriteOnlyFolderFactory(namespaceContext, new UUID(globalId, WRITE_ONLY_FOLDER_LEAST));
 
         this.folderNode = new UaFolderNode(
                 getNodeContext(),
-                newNodeId("HelloWorld"),
-                newQualifiedName("HelloWorld"),
-                LocalizedText.english("HelloWorld")
+                newNodeId(relativeName),
+                newQualifiedName(relativeName),
+                LocalizedText.english(relativeName)
         );
 
         // y se incorpora el NodeManager
@@ -100,27 +92,28 @@ public class HelloWorldFolder extends AbstractNodeDomainCloseable {
 
     }
 
-    public void addChilds() {
+    private void addChilds() {
+        closeableNodes.add(adminReadableFolderFactory.instantiate(folderNode));
+        closeableNodes.add(adminWritableFolderFactory.instantiate(folderNode));
+        closeableNodes.add(arrayFolderFactory.instantiate(folderNode));
+        closeableNodes.add(dataAccessFolderFactory.instantiate(folderNode));
+        closeableNodes.add(dynamicFolderFactory.instantiate(folderNode));
+        closeableNodes.add(generateEventMethodNodeFactory.instantiate(folderNode));
+        closeableNodes.add(scalarFolderFactory.instantiate(folderNode));
+        closeableNodes.add(sqrtMethodFactory.instantiate(folderNode));
+        closeableNodes.add(writeOnlyFolderFactory.instantiate(folderNode));
+    }
 
-        try {
+    @Override
+    public void uninstall() {
 
-            this.customEnumTypeInstance = customEnumTypeFactory.instantiate(folderNode);
-            this.customStructTypeInstance = customStructTypeFactory.instantiate(folderNode);
-            this.customUnionTypeInstance = customUnionTypeFactory.instantiate(folderNode);
-
-            this.adminReadableNodesFolder = adminReadableFolderFactory.instantiate(folderNode);
-            this.adminWritableNodesFolder = adminWritableFolderFactory.instantiate(folderNode);
-            this.arrayFolder = arrayFolderFactory.instantiate(folderNode);
-            this.dataAccessNodesFolder = dataAccessFolderFactory.instantiate(folderNode);
-            this.dynamicFolder = dynamicFolderFactory.instantiate(folderNode);
-            this.generateEventMethodNode = generateEventMethodNodeFactory.instantiate(folderNode);
-            this.scalarFolder = scalarFolderFactory.instantiate(folderNode);
-            this.sqrtMethod = sqrtMethodFactory.instantiate(folderNode);
-            this.writeOnlyFolder = writeOnlyFolderFactory.instantiate(folderNode);
-
-        } catch (Exception e) {
-            logger.error("Ha sido imposible ensamblar el nodo", e);
+        // Primero se desinstalan los hijos
+        for (DomainCloseable domainCloseable : closeableNodes) {
+            domainCloseable.uninstall();
         }
+
+        // Despues el padre
+        // TODO:...
 
     }
 

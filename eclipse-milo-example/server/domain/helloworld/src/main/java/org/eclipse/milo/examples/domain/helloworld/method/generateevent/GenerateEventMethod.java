@@ -8,16 +8,18 @@ import org.eclipse.milo.opcua.sdk.server.nodes.UaMethodNode;
 import org.eclipse.milo.opcua.stack.core.Identifiers;
 import org.eclipse.milo.opcua.stack.core.types.builtin.LocalizedText;
 
+import java.util.UUID;
+
 public class GenerateEventMethod extends AbstractNodeDomainCloseable {
 
     final private UaMethodNode methodNode;
 
-    public GenerateEventMethod(NamespaceContext namespaceContext, UaFolderNode parentFolderNode) {
+    public GenerateEventMethod(NamespaceContext namespaceContext, UaFolderNode parentFolderNode, UUID uuid) {
 
         super(namespaceContext);
 
         this.methodNode = UaMethodNode.builder(getNodeContext())
-                .setNodeId(newNodeId("HelloWorld/generateEvent(eventTypeId)"))
+                .setNodeId(newNodeId(uuid))
                 .setBrowseName(newQualifiedName("generateEvent(eventTypeId)"))
                 .setDisplayName(new LocalizedText(null, "generateEvent(eventTypeId)"))
                 .setDescription(LocalizedText.english("Generate an Event with the TypeDefinition indicated by eventTypeId."))

@@ -8,16 +8,18 @@ import org.eclipse.milo.opcua.sdk.server.nodes.UaMethodNode;
 import org.eclipse.milo.opcua.stack.core.Identifiers;
 import org.eclipse.milo.opcua.stack.core.types.builtin.LocalizedText;
 
+import java.util.UUID;
+
 public class SqrtMethod extends AbstractNodeDomainCloseable {
 
     final private UaMethodNode methodNode;
 
-    public SqrtMethod(NamespaceContext namespaceContext, UaFolderNode parentFolderNode) {
+    public SqrtMethod(NamespaceContext namespaceContext, UaFolderNode parentFolderNode, UUID uuid) {
 
         super(namespaceContext);
 
         this.methodNode = UaMethodNode.builder(getNodeContext())
-                .setNodeId(newNodeId("HelloWorld/sqrt(x)"))
+                .setNodeId(newNodeId(uuid))
                 .setBrowseName(newQualifiedName("sqrt(x)"))
                 .setDisplayName(new LocalizedText(null, "sqrt(x)"))
                 .setDescription(

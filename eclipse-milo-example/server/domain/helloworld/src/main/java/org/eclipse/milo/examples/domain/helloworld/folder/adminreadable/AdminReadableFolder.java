@@ -11,17 +11,19 @@ import org.eclipse.milo.opcua.stack.core.types.builtin.DataValue;
 import org.eclipse.milo.opcua.stack.core.types.builtin.LocalizedText;
 import org.eclipse.milo.opcua.stack.core.types.builtin.Variant;
 
+import java.util.UUID;
+
 public class AdminReadableFolder extends AbstractNodeDomainCloseable {
 
     final private UaFolderNode folderNode;
 
-    public AdminReadableFolder(NamespaceContext namespaceContext, UaFolderNode parentFolderNode) {
+    public AdminReadableFolder(NamespaceContext namespaceContext, UaFolderNode parentFolderNode, UUID uuid) {
 
         super(namespaceContext);
 
         this.folderNode = new UaFolderNode(
                 getNodeContext(),
-                newNodeId("HelloWorld/OnlyAdminCanRead"),
+                newNodeId(uuid),
                 newQualifiedName("OnlyAdminCanRead"),
                 LocalizedText.english("OnlyAdminCanRead")
         );

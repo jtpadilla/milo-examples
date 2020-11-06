@@ -55,7 +55,7 @@ public class Namespace extends ExampleNamespace {
             CustomUnionTypeFactory.register(getNamespaceContext());
 
             // Se crean las carpetas principales
-            this.helloWorldFolder = helloWorldFolderFactory.instantiate();
+            this.helloWorldFolder = helloWorldFolderFactory.instantiate(1);
 
         } catch (Exception e) {
             e.printStackTrace();
