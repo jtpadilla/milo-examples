@@ -22,12 +22,22 @@ public class Server {
     }
 
     static public Server launch() throws Exception {
-        OpcUaServerConfig config = Builder.buildConfig();
-        final OpcUaServer server = new OpcUaServer(config);
+
+        // Se crea el servidor OPC UA
+        final OpcUaServer server = new OpcUaServer(Builder.buildConfig());
+
+        // Se crea el Namespace
         final ManagedNamespaceWithLifecycle namespace = new Namespace(server);
+
+        // Se inicia primero en Namespace
         namespace.startup();
+
+        // Se inicia despues del servidor OPC UA (y se espara asincronamente)
         server.startup().get();
+
+        // Se retorna el Wrapper del conjunto para poder paralo despues
         return new Server(server, namespace);
+
     }
 
     private final OpcUaServer server;
