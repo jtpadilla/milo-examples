@@ -30,7 +30,7 @@ public class ClientExampleRunner {
 
     private final ClientExample clientExample;
 
-    public ClientExampleRunner(ClientExample clientExample) throws Exception {
+    public ClientExampleRunner(ClientExample clientExample) {
         this.clientExample = clientExample;
     }
 

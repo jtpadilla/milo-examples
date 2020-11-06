@@ -28,6 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
@@ -36,7 +37,7 @@ import static org.eclipse.milo.opcua.stack.core.util.ConversionUtil.toList;
 
 public class BrowseExample implements ClientExample {
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         new ClientExampleRunner(new BrowseExample()).run();
     }
 
@@ -45,16 +46,18 @@ public class BrowseExample implements ClientExample {
     @Override
     public void run(OpcUaClient client, CompletableFuture<OpcUaClient> future) throws Exception {
 
-        // synchronous connect
+        // Conexion sincrona
         client.connect().get();
 
-        // start browsing at root folder
+        // Se empieza en la carpeta raiz
         browseNode("", client, Identifiers.RootFolder);
 
         future.complete(client);
+
     }
 
     private void browseNode(String indent, OpcUaClient client, NodeId browseRoot) {
+
         BrowseDescription browse = new BrowseDescription(
             browseRoot,
             BrowseDirection.Forward,
@@ -65,16 +68,25 @@ public class BrowseExample implements ClientExample {
         );
 
         try {
+
             BrowseResult browseResult = client.browse(browse).get();
 
             List<ReferenceDescription> references = toList(browseResult.getReferences());
 
             for (ReferenceDescription rd : references) {
+
+                // Se muetsran los de la carpeta actual
                 System.out.println(
                     String.format("%s %s", indent, referenceDescriptionToString(rd))
                 );
 
-                // recursively browse to children
+                // Se muestran los hijos
+//                ExpandedNodeId nodeId = rd.getNodeId();
+//                Optional<NodeId> local = nodeId.local(client.getNamespaceTable());
+//                if (local.isPresent()) {
+//                    browseNode(indent + "  ", client, nodeId);
+//                }
+
                 rd.getNodeId().local(client.getNamespaceTable())
                     .ifPresent(nodeId -> browseNode(indent + "  ", client, nodeId));
             }
